@@ -2,3 +2,5 @@ fastapi
 uvicorn
 sqlalchemy[asyncio]
 asyncpg
+pydantic
+python-multipart
