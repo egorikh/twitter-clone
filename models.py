@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Integer, Column, String, ForeignKey, DATETIME, Table
+from sqlalchemy import Integer, Column, String, ForeignKey, Table, DateTime, func
 from sqlalchemy.orm import relationship
 
 from core.database import Base
@@ -28,7 +28,7 @@ class User(Base):
         following (relationship): Подписки пользователя (связь через Follow.follower_id).
     """
 
-    __table__name = "users"
+    __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
     api_key = Column(String, unique=True, nullable=False)
@@ -59,7 +59,7 @@ class Tweet(Base):
     id = Column(Integer, primary_key=True)
     content = Column(String(280), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"))
-    created_at = Column(DATETIME, default=datetime.now())
+    created_at = Column(DateTime(timezone=True), default=func.now())
     author = relationship("User", back_populates="tweets")
     likes = relationship("Like", back_populates="tweet")
     media = relationship(
@@ -105,7 +105,7 @@ class Follow(Base):
         "User", foreign_keys=[follower_id], back_populates="following"
     )
     following = relationship(
-        "User", foreign_keys=[following_id], back_populates="follower"
+        "User", foreign_keys=[following_id], back_populates="followers"
     )
 
 
